@@ -35,3 +35,11 @@ body {
         display: none;
     }
 }
+
+.navbar-inverse{
+    background-color: #551a8b;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #9d9d9d;
+}

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MvcMovie.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MvcMovie.Controllers
 {
@@ -19,9 +17,22 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, bool? sort = null)
         {
-            return View(await _context.Movie.ToListAsync());
+            var movies = from m in _context.Movie
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+            
+            if (sort.HasValue)
+            {
+                movies = sort.Value ? movies.OrderBy(x => x.ReleaseDate) : movies.OrderByDescending(x => x.ReleaseDate);
+            }
+
+            return View(await movies.ToListAsync());
         }
 
         // GET: Movies/Details/5
